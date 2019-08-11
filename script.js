@@ -18,49 +18,45 @@ return avg.toFixed(2);
 };
 
 //Создаем функцию Group
-function Group(...obj){
-  this.arrGroup = Array.prototype.slice.call(Array.from(obj));
+function Group(){
+  for (var i = 0; i < arguments.length; i++){
+    this.push(arguments[i]);
+  }
  } 
+
 Group.prototype = Object.create(Array.prototype);
 
-
-Group.prototype.sortGroup = function(){
-  this.arrGroup.sort(function(a, b) {
-        return a.name > b.name ? 1 : -1;
-  });
-  return this.arrGroup;
-};
-
+//Средняя оценка за предмет
 Group.prototype.getAverageMarkGroup = function(){
-  var avg = [];
-  for (var i = 0; i < this.arrGroup.map(s => s.marks)[0].length; i++){
-      avg[i] = this.arrGroup.reduce(function(sum, current){
+  var temp = this;
+  var avg = this[0].marks.map(function(s, i) {
+    avg = temp.reduce(function(sum, current){
         return (sum + current.marks[i])/2;
       }, 0);
-      console.log("Номер предмета: " + i + ", Средняя оценка за предмет: " + avg[i].toFixed(2));
-    } 
+    console.log("Предмет: " + i + " оценка: " + avg);
+  }); 
 };
 
   //Получение отсортированного по среднему балу списка студентов
  Group.prototype.sortAverageMarkGroup = function(){
-    this.arrGroup.sort(function(a, b) {
+    this.sort(function(a, b) {
         return a.getAverageMark() > b.getAverageMark() ? 1 : -1;
       });
-    return this.arrGroup;
+    return this;
 };
 
  //Добавление студента
 Group.prototype.addStudent = function(obj){
-  this.arrGroup.push(obj);
-  return this.arrGroup;
+  this.push(obj);
+  return this;
 };
 
 //Удаление студента
 Group.prototype.removeStudent = function(name) {
-  var indexStudent = this.arrGroup.findIndex(function(student){
+  var indexStudent = this.findIndex(function(student){
     return student.name === name;
   });
-  this.arrGroup.splice(indexStudent, 1);
+  this.splice(indexStudent, 1);
 };
 
 
@@ -93,7 +89,8 @@ console.log(`Средняя оценка ${alex.name}: ` + alex.getAverageMark()
 
 var group = new Group(olya, den, nikita, alex);
 console.log(group);
-console.log(group.sortGroup());
+group.sort((a, b) => a.name > b.name ? 1 : -1);
+console.log(group);
 group.getAverageMarkGroup();
 console.log(group.sortAverageMarkGroup());
 console.log(group.addStudent(anatoliy));
@@ -108,7 +105,7 @@ var gFilter = group.filter(t => t.age > 26);
 console.log("Студенты старше 26 лет:");
 console.log(gFilter);
 
-var gReduce = group.arrGroup.reduce(function(sum, current){
+var gReduce = group.reduce(function(sum, current){
           return (sum + current.marks[0]);
         }, 0);
 console.log("Сумма оценок за первый предмет: " + gReduce);
