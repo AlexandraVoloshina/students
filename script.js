@@ -19,22 +19,16 @@ return avg.toFixed(2);
 
 //Создаем функцию Group
 function Group(){
-  for (var i = 0; i < arguments.length; i++){
-    this.push(arguments[i]);
-  }
+  Array.prototype.push.apply(this, arguments);
  } 
 
 Group.prototype = Object.create(Array.prototype);
 
 //Средняя оценка за предмет
-Group.prototype.getAverageMarkGroup = function(){
-  var temp = this;
-  var avg = this[0].marks.map(function(s, i) {
-    avg = temp.reduce(function(sum, current){
-        return (sum + current.marks[i])/2;
-      }, 0);
-    console.log("Предмет: " + i + " оценка: " + avg);
-  }); 
+Group.prototype.getAverageMarkGroup = function(numberLesson){
+  return avg = this.reduce(function(sum, current){
+    return (sum + current.marks[numberLesson - 1])/2;
+  }, 0);
 };
 
   //Получение отсортированного по среднему балу списка студентов
@@ -68,19 +62,19 @@ var alex =  new Student('Alex', 25);
 var anatoliy =  new Student('Anatoliy', 25);
 
 den.addMarks(3, 1);
-den.addMarks(3, 2);
+den.addMarks(5, 2);
 den.addMarks(3, 3);
 olya.addMarks(2, 1);
-olya.addMarks(2, 2);
+olya.addMarks(3, 2);
 olya.addMarks(2, 3);
 nikita.addMarks(1, 1);
 nikita.addMarks(1, 2);
 nikita.addMarks(1, 3);
 alex.addMarks(4, 1);
-alex.addMarks(4, 2);
+alex.addMarks(5, 2);
 alex.addMarks(4, 3);
 anatoliy.addMarks(5, 1);
-anatoliy.addMarks(5, 2);
+anatoliy.addMarks(4, 2);
 anatoliy.addMarks(5, 3);
 console.log(`Средняя оценка ${den.name}: ` + den.getAverageMark());
 console.log(`Средняя оценка ${olya.name}: ` + olya.getAverageMark());
@@ -91,7 +85,9 @@ var group = new Group(olya, den, nikita, alex);
 console.log(group);
 group.sort((a, b) => a.name > b.name ? 1 : -1);
 console.log(group);
-group.getAverageMarkGroup();
+console.log("Вывод оценки за предмет №1: " + group.getAverageMarkGroup(1));
+console.log("Вывод оценки за предмет №2: " + group.getAverageMarkGroup(2));
+console.log("Вывод оценки за предмет №3: " + group.getAverageMarkGroup(3));
 console.log(group.sortAverageMarkGroup());
 console.log(group.addStudent(anatoliy));
 group.removeStudent("Anatoliy");
